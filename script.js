@@ -38,20 +38,72 @@ const tablero = (function(){
         }
         return true;
     }
+    const _loopCelds = ()=>{
+        //Metodo privada para recorrer cada celda
+    }
     const _rightDiagonal = (tamañoTabla,simbol,column,row) =>{
+        let result = true;
+        let direccion = 0;
         const max = tamañoTabla -column-1;
-        for (let i = 1; i <= max ;i++){
-            if(row-i <0 || matriz[row-i][column+i] != simbol) return false
+        
+        if(direccion === 0){
+            for(let i = 1;i <= max;i++){
+                //right top
+                if(row-i >= 0 && matriz[row-i][column+i] != simbol){
+                    result = false;
+                }
+                if(result === false){
+                    direccion = 1;
+                    break;
+                }
+            }
+            direccion = 1;
         }
-        return true;
+        if(direccion === 1){
+            for(let i =1;i <= max;i++){
+                if(row+i < 3 && matriz[row+i][column+i] != simbol){
+                    return false;
+                }
+            }
+        }
+        //for (let i = 1; i <= max ;i++){
+            //if(row-i <0 || matriz[row-i][column+i] != simbol) return false
+            /*
+            if(matriz[row-i][column+i] === simbol) result = true;
+            else if (matriz[row+i][column+i] === simbol) result =  true;
+            */
+            
+        //}
+        return result;
     }
     const _leftDiagonal = (simbol,column,row) => {
         const max = column;
         let result =true;
-        for (let i = 1;i<=max;i++){
-            //if(matriz[row+i][column-i] != simbol) return false;
-             
+        let direccion = 0;
+        if(direccion === 0){
+            for (let i = 1;i<=max;i++){
+                //if(matriz[row+i][column-i] != simbol) return false;
+                //problema : row + i
+                if(result === true && row+i < 3 && matriz[row+i][column-i] != simbol){
+                    console.log('entro');
+                    result = false;
+                }
+                if(result === false){
+                    direccion = 1;
+                    console.log('a');
+                    break;   
+                }
+            }
+            direccion = 1;
         }
+        if(direccion === 1){
+            for(let i = 1;i<=max;i++){
+                if( row-i>=0 && matriz[row-i][column-i] != simbol)
+                    return false;
+            }
+            console.log(result);
+        }
+        
         return result;
     }
     const _completeColumn = (lastPosition,simbol) => {
