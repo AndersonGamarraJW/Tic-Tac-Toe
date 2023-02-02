@@ -47,10 +47,12 @@ const tablero = (function(){
     }
     const _leftDiagonal = (simbol,column,row) => {
         const max = column;
+        let result =true;
         for (let i = 1;i<=max;i++){
-            if(matriz[row+i][column-i] != simbol) return false;
+            //if(matriz[row+i][column-i] != simbol) return false;
+             
         }
-        return true;
+        return result;
     }
     const _completeColumn = (lastPosition,simbol) => {
         const [row,column] = lastPosition;
