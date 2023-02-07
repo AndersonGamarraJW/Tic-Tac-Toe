@@ -126,7 +126,7 @@ const tablero = (function(){
     }
     const completeRowColumn = (lastPosition,simbol) => {
         if(_completeColumn(lastPosition,simbol) || _completeRow(lastPosition,simbol) || _completeDiagonal(lastPosition,simbol))
-            console.log('Ganaste');
+            return true;
     }
     const printMatriz = () => {
         for (let i=0;i<matriz.length;i++) console.log(matriz[i])
@@ -145,18 +145,70 @@ function playerFabric(name,simbol){
     return {getName,setName,getSimbol,setSimbol}
 }
 
-const boxes = document.querySelectorAll('.box');
-
+//Controlador de juego
+const game = (function(){
+    const boxes = document.querySelectorAll('.box');
+    let _playerOne = undefined;
+    let _playerTwo = undefined;
+    let _dificulty = undefined;
+    let _currrentSimbol = undefined;
+    
+    const _isWin = (position) =>{
+        if(tablero.completeRowColumn(position,_currrentSimbol)) 
+            return true;
+        return false;       
+    }
+    const _switchCurrentSimbol = ()=>{
+        if(_currrentSimbol === _playerOne.getSimbol())
+            _currrentSimbol = _playerTwo.getSimbol();
+        else
+            _currrentSimbol = _playerOne.getSimbol();
+    }
+    //Controlador de la mecanica del juego
+    const _controlGame = function(){
+        this.textContent = _currrentSimbol;
+        const position = getGridElementsPosition(getNodeIndex(this));
+        tablero.setSimbol(position,_currrentSimbol);
+        if(_isWin(position)) _endGame();            
+        _switchCurrentSimbol();
+        this.removeEventListener('click',_controlGame);
+    }
+    const _setEventBox = ()=>{
+        boxes.forEach(box=>{
+            box.addEventListener('click',_controlGame);
+        });
+    }
+    const _getWinPlayer = () =>{
+        if(_currrentSimbol === _playerOne.getSimbol()) 
+            return _playerOne;
+        return _playerTwo;
+    }
+    const startGame = (firstPlayer,secondPlayer,dificulty = undefined)=>{
+        _currrentSimbol = firstPlayer.getSimbol();
+        _dificulty = dificulty;
+        _playerOne = firstPlayer;
+        _playerTwo = secondPlayer;
+        _setEventBox();
+    }
+    
+    const _endGame = ()=>{
+        let winPlayer = _getWinPlayer();
+        console.log('Ganaste',winPlayer.getName());
+    }
+    return {startGame}
+    
+})();
+//luego cambiar con la propiedad simbol de un jugador
 function setSimbol(){
     let position = getGridElementsPosition(getNodeIndex(this));
-    tablero.setSimbol(position,'x');
+    tablero.setSimbol(position,simbol);
     tablero.printMatriz();
-    tablero.completeRowColumn(position,'x');
-
+    tablero.completeRowColumn(position,simbol);
+    this.textContent = simbol;
+    if(simbol === 'x') simbol = 'o';
+    else simbol = 'x';
 }
-boxes.forEach(box=>{
-    box.addEventListener('click',setSimbol);
-});
+
 
 function getGridElementsPosition(index){
     //Toma la contenedora grid, la que almacena todos los grid-elements
@@ -182,3 +234,9 @@ function getNodeIndex(elm){
         if(c[i] === elm) return i
     }
 }
+
+//codigo general
+
+playerOne = playerFabric('Anderson','x');
+playerTwo = playerFabric('William','o');
+game.startGame(playerOne,playerTwo);

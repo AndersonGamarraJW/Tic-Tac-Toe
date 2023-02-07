@@ -44,5 +44,13 @@ body {
 .box{
     width: 100px;
     height: 100px;
-    background-color: red;
+    background-color: #a26769;
+    border-radius: 1rem;
+    text-align: center;
+    padding-top: 20%;
+    color: #fff;
+    font-size: 3rem;
+}
+.box:hover{
+    box-shadow: inset 0px 0px 20fpx #8E5A5C;
 }
