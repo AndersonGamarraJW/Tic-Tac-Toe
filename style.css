@@ -54,3 +54,20 @@ body {
 .box:hover{
     box-shadow: inset 0px 0px 20fpx #8E5A5C;
 }
+.form-container{
+    width: 100px;
+    height: 100px;
+    background-color: red;
+}
+.form-container::before{
+    opacity: 0;
+    content: 'error';
+    color: yellow;
+}
+/*
+#forms-container{
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    background-color: red;
+}

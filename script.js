@@ -235,8 +235,9 @@ function getNodeIndex(elm){
     }
 }
 
-//codigo general
+//Codigo general
 
 playerOne = playerFabric('Anderson','x');
 playerTwo = playerFabric('William','o');
 game.startGame(playerOne,playerTwo);
+
