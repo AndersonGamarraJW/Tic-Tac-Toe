@@ -183,11 +183,10 @@ const game = (function(){
             return _playerOne;
         return _playerTwo;
     }
-    const startGame = (firstPlayer,secondPlayer,dificulty = undefined)=>{
-        _currrentSimbol = firstPlayer.getSimbol();
-        _dificulty = dificulty;
-        _playerOne = firstPlayer;
-        _playerTwo = secondPlayer;
+    const startGame = (playerOne,playerTwo)=>{
+        _currrentSimbol = playerOne.getSimbol();
+        _playerOne = playerOne;
+        _playerTwo = playerTwo;
         _setEventBox();
     }
     
@@ -234,10 +233,60 @@ function getNodeIndex(elm){
         if(c[i] === elm) return i
     }
 }
-
+//Display controller
+const displayController = (function(){
+    const main = document.querySelector('main');
+    const removeCreatePlayerWindow = ()=>{
+        const createPlayerWindow = document.querySelector('#create-player-window');
+        main.removeChild(createPlayerWindow);
+    }
+    const _emptyNamePlayer = (elm) =>{
+        elm.parentNode.classList.add('content-empty');
+    }
+    const validateNamePlayers = () => {
+        const playerOneName = document.querySelector('#player-one-name');
+        const playerTwoName = document.querySelector('#player-two-name');
+        if(playerOneName.value === ""){
+            _emptyNamePlayer(playerOneName);
+            return false;
+        }
+        if(playerTwoName.value === ""){
+            _emptyNamePlayer(playerTwoName);
+            return false;
+        }
+        return true;
+    }
+    const validateSimbolPlayers = () => {
+        const playerOneSimbol = document.querySelector('#player-one-simbol');
+        const playerTwoSimbol = document.querySelector('#player-two-simbol');
+        if(playerOneSimbol.value === playerTwoSimbol.value)
+            return false;
+        return true;
+    }
+    const getPlayers = () => {
+        const playerOneName = document.querySelector('#player-one-name');
+        const playerTwoName = document.querySelector('#player-two-name');
+        const playerOneSimbol = document.querySelector('#player-one-simbol');
+        const playerTwoSimbol = document.querySelector('#player-two-simbol');
+        
+        return {
+            playerOne : playerFabric(playerOneName.value,playerOneSimbol.value),
+            playerTwo : playerFabric(playerTwoName.value,playerTwoSimbol.value)
+        }
+    }
+    
+    return {removeCreatePlayerWindow,validateNamePlayers,validateSimbolPlayers,getPlayers}
+})();
 //Codigo general
+function startGame(){
+    if(!(displayController.validateNamePlayers() && displayController.validateSimbolPlayers()))
+        return;
+    
+    players = displayController.getPlayers();
+    displayController.removeCreatePlayerWindow();
+    game.startGame(players.playerOne,players.playerTwo);
+}
+const playButton = document.querySelector('#play-button');
 
-playerOne = playerFabric('Anderson','x');
-playerTwo = playerFabric('William','o');
-game.startGame(playerOne,playerTwo);
+playButton.addEventListener('click',startGame);
 
